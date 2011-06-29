@@ -29,7 +29,7 @@ public class MonthYearDateSlider extends DateSlider {
 	}
     public MonthYearDateSlider(Context context, OnDateSetListener l, Calendar calendar, 
     		Calendar minDate, Calendar maxDate) {
-        super(context, R.layout.monthyeardateslider, l, calendar, minDate, maxDate);
+        super(context, SliderController.instance(context).getParcel().getLayoutId("monthyeardateslider"), l, calendar, minDate, maxDate);
     }
 
     /**
@@ -39,7 +39,7 @@ public class MonthYearDateSlider extends DateSlider {
     protected void setTitle() {
         if (mTitleText != null) {
             final Calendar c = getTime();
-            mTitleText.setText(getContext().getString(R.string.dateSliderTitle) +
+            mTitleText.setText(getContext().getString(SliderController.instance().getParcel().getIdentifier("dateSliderTitle", "string")) +
                     String.format(": %tB %tY",c,c));
         }
     }

@@ -64,6 +64,7 @@ public class DateSlider extends Dialog {
     public DateSlider(Context context, int layoutID, OnDateSetListener l,
             Calendar initialTime, Calendar minTime, Calendar maxTime, int minInterval) {
         super(context);
+        SliderController.instance(context);
         this.onDateSetListener = l;
         this.minTime = minTime; this.maxTime = maxTime;
         mInitialTime = Calendar.getInstance(initialTime.getTimeZone());
@@ -93,10 +94,10 @@ public class DateSlider extends Dialog {
 
         this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(mLayoutID);
-        this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.dialogtitle);
+        this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, SliderController.instance().getParcel().getLayoutId("dialogtitle"));
 
-        mTitleText = (TextView) this.findViewById(R.id.dateSliderTitleText);
-        mContainer = (SliderContainer) this.findViewById(R.id.dateSliderContainer);
+        mTitleText = (TextView) this.findViewById(SliderController.instance().getParcel().getItemId("dateSliderTitleText"));
+        mContainer = (SliderContainer) this.findViewById(SliderController.instance().getParcel().getItemId("dateSliderContainer"));
 
         mContainer.setOnTimeChangeListener(onTimeChangeListener);
         mContainer.setMinuteInterval(minuteInterval);
@@ -104,10 +105,10 @@ public class DateSlider extends Dialog {
         if (minTime!=null) mContainer.setMinTime(minTime);
         if (maxTime!=null) mContainer.setMaxTime(maxTime);
 
-        Button okButton = (Button) findViewById(R.id.dateSliderOkButton);
+        Button okButton = (Button) findViewById(SliderController.instance().getParcel().getItemId("dateSliderOkButton"));
         okButton.setOnClickListener(okButtonClickListener);
 
-        Button cancelButton = (Button) findViewById(R.id.dateSliderCancelButton);
+        Button cancelButton = (Button) findViewById(SliderController.instance().getParcel().getItemId("dateSliderCancelButton"));
         cancelButton.setOnClickListener(cancelButtonClickListener);
     }
 
@@ -157,7 +158,7 @@ public class DateSlider extends Dialog {
     protected void setTitle() {
         if (mTitleText != null) {
             final Calendar c = getTime();
-            mTitleText.setText(getContext().getString(R.string.dateSliderTitle) +
+            mTitleText.setText(getContext().getString(SliderController.instance().getParcel().getIdentifier("dateSliderTitle", "string")) +
                     String.format(": %te. %tB %tY", c, c, c));
         }
     }

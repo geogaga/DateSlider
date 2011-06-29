@@ -29,7 +29,7 @@ public class SliderController {
 
     public ParcelHelper getParcel() {
         if(null == mParcel) {
-            mParcel = new ParcelHelper("dateandmoreslider", mContext);
+            mParcel = new ParcelHelper("dateslider", mContext);
         }
         return mParcel;
     }

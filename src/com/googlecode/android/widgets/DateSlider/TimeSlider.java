@@ -35,7 +35,7 @@ public class TimeSlider extends DateSlider {
 	
     public TimeSlider(Context context, OnDateSetListener l, Calendar calendar, 
     		Calendar minTime, Calendar maxTime, int minuteInterval) {
-        super(context, R.layout.timeslider, l, calendar, minTime, maxTime, minuteInterval);
+        super(context, SliderController.instance(context).getParcel().getLayoutId("timeslider"), l, calendar, minTime, maxTime, minuteInterval);
     }
 
     /**

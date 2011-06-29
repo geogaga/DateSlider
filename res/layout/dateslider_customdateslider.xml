@@ -7,13 +7,18 @@
     android:layout_height="fill_parent">
     <com.googlecode.android.widgets.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.HourLabeler"
-        app:labelerFormat="%tk"
-        app:childWidth="90dp"/>
+        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.YearLabeler"
+        app:labelerFormat="%tY"
+        app:childWidth="200dp"/>
     <com.googlecode.android.widgets.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.MinuteLabeler"
-        app:labelerFormat="%tM"
-        app:childWidth="45dp"/>
-    <include layout="@layout/dialogbuttons"/>
+        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.WeekLabeler"
+        app:labelerFormat="week %d"
+        app:childWidth="100dp"/>
+    <com.googlecode.android.widgets.DateSlider.ScrollLayout
+        style="@style/Scroller"
+        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.DayLabeler"
+        app:labelerFormat="%tA"
+        app:childWidth="150dp"/>
+    <include layout="@layout/dateslider_dialogbuttons"/>
 </com.googlecode.android.widgets.DateSlider.SliderContainer>

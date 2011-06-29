@@ -99,8 +99,8 @@ public class ScrollLayout extends LinearLayout {
     public ScrollLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setWillNotDraw(false);
-        rightShadow = getContext().getResources().getDrawable(R.drawable.right_shadow);
-        leftShadow = getContext().getResources().getDrawable(R.drawable.left_shadow);
+        rightShadow = getContext().getResources().getDrawable(SliderController.instance().getParcel().getDrawableId("right_shadow"));
+        leftShadow = getContext().getResources().getDrawable(SliderController.instance().getParcel().getDrawableId("left_shadow"));
         mScroller = new Scroller(getContext());
         setGravity(Gravity.CENTER_VERTICAL);
         setOrientation(HORIZONTAL);
@@ -110,16 +110,16 @@ public class ScrollLayout extends LinearLayout {
         float density = getContext().getResources().getDisplayMetrics().density;
         mMaximumVelocity = (int)(4000 * 0.5f * density);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScrollLayout,
+        TypedArray a = context.obtainStyledAttributes(attrs, SliderController.instance().getParcel().getStyleableArray("ScrollLayout"),
                 0, 0);
 
         // Get the labeler class and construct an instance
-        String className = a.getNonResourceString(R.styleable.ScrollLayout_labelerClass);
+        String className = a.getNonResourceString(SliderController.instance().getParcel().getStyleableId("ScrollLayout", "labelerClass"));
         if (className == null) {
             throw new RuntimeException("Must specify labeler class at " + a.getPositionDescription());
         }
 
-        String labelerFormat = a.getString(R.styleable.ScrollLayout_labelerFormat);
+        String labelerFormat = a.getString(SliderController.instance().getParcel().getStyleableId("ScrollLayout", "labelerFormat"));
         if (labelerFormat == null) {
             throw new RuntimeException("Must specify labelerFormat at " + a.getPositionDescription());
         }
@@ -134,9 +134,9 @@ public class ScrollLayout extends LinearLayout {
 
         // Determine the width and height of our children, using the labelers preferred
         // values as defaults
-        objWidth = a.getDimensionPixelSize(R.styleable.ScrollLayout_childWidth,
+        objWidth = a.getDimensionPixelSize(SliderController.instance().getParcel().getStyleableId("ScrollLayout", "childWidth"),
                 mLabeler.getPreferredViewWidth(context));
-        objHeight = a.getDimensionPixelSize(R.styleable.ScrollLayout_childHeight,
+        objHeight = a.getDimensionPixelSize(SliderController.instance().getParcel().getStyleableId("ScrollLayout", "childHeight"),
                 mLabeler.getPreferredViewHeight(context));
 
         a.recycle();

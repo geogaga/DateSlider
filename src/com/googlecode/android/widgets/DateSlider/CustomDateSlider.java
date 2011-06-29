@@ -26,7 +26,7 @@ import android.content.Context;
 public class CustomDateSlider extends DateSlider {
 
     public CustomDateSlider(Context context, OnDateSetListener l, Calendar calendar) {
-        super(context, R.layout.customdateslider, l, calendar);
+        super(context, SliderController.instance(context).getParcel().getLayoutId("customdateslider"), l, calendar);
     }
 
     /**
@@ -36,7 +36,7 @@ public class CustomDateSlider extends DateSlider {
     protected void setTitle() {
         if (mTitleText != null) {
             final Calendar c = getTime();
-            mTitleText.setText(getContext().getString(R.string.dateSliderTitle) +
+            mTitleText.setText(getContext().getString(SliderController.instance().getParcel().getIdentifier("dateSliderTitle", "string")) +
                     String.format(": %tA, %te/%tm/%ty", c, c, c, c));
         }
     }

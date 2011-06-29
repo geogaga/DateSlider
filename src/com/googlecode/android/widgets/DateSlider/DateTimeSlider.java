@@ -32,7 +32,7 @@ public class DateTimeSlider extends DateSlider {
 	
     public DateTimeSlider(Context context, OnDateSetListener l,	Calendar calendar, 
     		Calendar minDate, Calendar maxDate) {
-        super(context, R.layout.datetimeslider, l, calendar, minDate, maxDate);
+        super(context, SliderController.instance(context).getParcel().getLayoutId("datetimeslider"), l, calendar, minDate, maxDate);
     }
 
     @Override
