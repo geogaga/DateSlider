@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.googlecode.android.widgets.DateSlider.SliderContainer
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.googlecode.android.widgets.DateSlider"
+    android:id="@+id/dateSliderContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <ViewSwitcher android:id="@+id/dateSliderFlipView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+    >
+        <LinearLayout android:id="@+id/datePickerView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+         >
+            <com.googlecode.android.widgets.DateSlider.ScrollLayout
+                style="@style/Scroller"
+                app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.YearLabeler"
+                app:labelerFormat="%tY"
+                app:childWidth="120dp"/>
+            <com.googlecode.android.widgets.DateSlider.ScrollLayout
+                style="@style/Scroller"
+                app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.MonthLabeler"
+                app:labelerFormat="%tb"
+                app:childWidth="120dp"/>
+            <com.googlecode.android.widgets.DateSlider.ScrollLayout
+                style="@style/Scroller"
+                app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.DayDateLabeler"
+                app:labelerFormat="%td %ta"
+                app:childWidth="80dp"/>
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/timePickerView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+         >
+            <com.googlecode.android.widgets.DateSlider.ScrollLayout
+                style="@style/Scroller"
+                app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.HourLabeler"
+                app:labelerFormat="%tk"
+                app:childWidth="90dp"/>
+            <com.googlecode.android.widgets.DateSlider.ScrollLayout
+                style="@style/Scroller"
+                app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.MinuteLabeler"
+                app:labelerFormat="%tM"
+                app:childWidth="45dp"/>
+        </LinearLayout>
+    </ViewSwitcher>
+    <include layout="@layout/dateslider_dialogbuttonsincflipper"/>
+</com.googlecode.android.widgets.DateSlider.SliderContainer>

@@ -47,6 +47,7 @@ static final int MONTHYEARDATESELECTOR_ID = 3;
 static final int TIMESELECTOR_ID = 4;
 static final int TIMESELECTOR_WITHLIMIT_ID = 7;
 static final int DATETIMESELECTOR_ID = 5;
+static final int DATETIMEPICKERSELECTOR_ID = 8;
 
     private TextView dateText;
 
@@ -101,6 +102,7 @@ static final int DATETIMESELECTOR_ID = 5;
             }
         });
 
+        /*
         Button timeButton = (Button) this.findViewById(R.id.timeSelectButton);
         // set up a listener for when the button is pressed
         timeButton.setOnClickListener(new OnClickListener() {
@@ -109,6 +111,7 @@ static final int DATETIMESELECTOR_ID = 5;
                 showDialog(TIMESELECTOR_ID);
             }
         });
+        */
         
         Button timeLimitButton = (Button) this.findViewById(R.id.timeLimitSelectButton);
         // set up a listener for when the button is pressed
@@ -127,6 +130,16 @@ static final int DATETIMESELECTOR_ID = 5;
                 showDialog(DATETIMESELECTOR_ID);
             }
         });
+
+        Button timeButton = (Button) this.findViewById(R.id.dateTimePickerSelectButton);
+        // set up a listener for when the button is pressed
+        timeButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+                // call the internal showDialog method using the predefined ID
+                showDialog(DATETIMEPICKERSELECTOR_ID);
+            }
+        });
+
     }
 
     // define the listener which is called once a user selected the date.
@@ -165,6 +178,15 @@ static final int DATETIMESELECTOR_ID = 5;
             }
     };
 
+    private DateSlider.OnDateSetListener mFinerDateTimeSetListener =
+        new DateSlider.OnDateSetListener() {
+            public void onDateSet(DateSlider view, Calendar selectedDate) {
+                // update the dateText view with the corresponding date
+                dateText.setText(String.format("The chosen date and time:%n%te. %tB %tY%n%tH:%tM",
+                        selectedDate, selectedDate, selectedDate, selectedDate, selectedDate));
+            }
+    };
+
     @Override
     protected Dialog onCreateDialog(int id) {
         // this method is called after invoking 'showDialog' for the first time
@@ -173,25 +195,27 @@ static final int DATETIMESELECTOR_ID = 5;
         final Calendar c = Calendar.getInstance();
         switch (id) {
         case DEFAULTDATESELECTOR_ID:
-            return new DefaultDateSlider(this,mDateSetListener,c);
+            return new DefaultDateSlider(this,mDateSetListener,c).asDialog();
         case DEFAULTDATESELECTOR_WITHLIMIT_ID:
         	final Calendar maxTime = Calendar.getInstance();
         	maxTime.add(Calendar.DAY_OF_MONTH, 14);
-            return new DefaultDateSlider(this,mDateSetListener,c,c,maxTime);
+            return new DefaultDateSlider(this,mDateSetListener,c,c,maxTime).asDialog();
         case ALTERNATIVEDATESELECTOR_ID:
-            return new AlternativeDateSlider(this,mDateSetListener,c,c,null);
+            return new AlternativeDateSlider(this,mDateSetListener,c,c,null).asDialog();
         case CUSTOMDATESELECTOR_ID:
-            return new CustomDateSlider(this,mDateSetListener,c);
+            return new CustomDateSlider(this,mDateSetListener,c).asDialog();
         case MONTHYEARDATESELECTOR_ID:
-            return new MonthYearDateSlider(this,mMonthYearSetListener,c);
+            return new MonthYearDateSlider(this,mMonthYearSetListener,c).asDialog();
         case TIMESELECTOR_ID:
-            return new TimeSlider(this,mTimeSetListener,c,15);
+            return new TimeSlider(this,mTimeSetListener,c,15).asDialog();
         case TIMESELECTOR_WITHLIMIT_ID:
         	final Calendar minTime = Calendar.getInstance();
         	minTime.add(Calendar.HOUR, -2);
-            return new TimeSlider(this,mTimeSetListener,c,minTime,c,5);
+            return new TimeSlider(this,mTimeSetListener,c,minTime,c,5).asDialog();
         case DATETIMESELECTOR_ID:
-            return new DateTimeSlider(this,mDateTimeSetListener,c);
+            return new DateTimeSlider(this,mDateTimeSetListener,c).asDialog();
+        case DATETIMEPICKERSELECTOR_ID:
+            return new DateTimePickerSlider(this,mFinerDateTimeSetListener,c).asDialog();
         }
         return null;
     }

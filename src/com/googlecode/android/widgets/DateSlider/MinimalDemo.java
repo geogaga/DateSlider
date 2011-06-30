@@ -78,7 +78,7 @@ static final int DEFAULTDATESELECTOR_ID = 0;
         
         switch (id) {
         case DEFAULTDATESELECTOR_ID:
-            return new DefaultDateSlider(this,mDateSetListener,c);
+            return new DefaultDateSlider(this,mDateSetListener,c).asDialog();
         }
         return null;
     }

@@ -1,12 +1,15 @@
 package com.googlecode.android.widgets.DateSlider;
 
 import java.util.Calendar;
-
+import java.util.LinkedList;
+import java.util.List;
 
 
 import android.content.Context;
+import android.database.CursorJoiner;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 /**
@@ -19,6 +22,7 @@ public class SliderContainer extends LinearLayout {
     private Calendar mTime = null;
     private OnTimeChangeListener mOnTimeChangeListener;
     private int minuteInterval;
+    private LinkedList<View> mDescendants = null;
 
     public SliderContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -27,9 +31,9 @@ public class SliderContainer extends LinearLayout {
 
     @Override
     protected void onFinishInflate() {
-        final int childCount = getChildCount();
+        final int childCount = getRelevantChildCount();
         for (int i = 0; i < childCount; i++) {
-            View v = getChildAt(i);
+            View v = getRelevantChildAt(i);
             if (v instanceof ScrollLayout) {
                 final ScrollLayout sl = (ScrollLayout)v;
                 sl.setOnScrollListener(
@@ -42,6 +46,42 @@ public class SliderContainer extends LinearLayout {
             }
         }
     }
+
+    /* HELPERS */
+    public int getRelevantChildCount() {
+        List<View> children = getRelevantViews(this);
+        return children.size();
+    }
+
+    public android.view.View getRelevantChildAt(int index) {
+        List<View> children = getRelevantViews(this);
+        return children.get(index);
+    }
+
+    protected List<View> getRelevantViews(ViewGroup view) {
+        if(mDescendants != null) {
+            return mDescendants;
+        }
+        LinkedList<View> children = new LinkedList<View>();
+        for(int i=0; i<view.getChildCount(); i++) {
+            View child = view.getChildAt(i);
+            if(child instanceof ScrollLayout) {
+                children.add(child);
+            }
+            else {
+                if(child instanceof ViewGroup) {
+                    children.addAll(getRelevantViews((ViewGroup)child));
+                }
+            }
+        }
+
+        if(view == this) {
+            mDescendants = children;
+        }
+        return children;
+    }
+    /* */
+
 
     /**
      * Set the current time and update all of the child ScrollLayouts accordingly.
@@ -73,9 +113,9 @@ public class SliderContainer extends LinearLayout {
     	if (mTime==null) {
     		throw new RuntimeException("You have to call setTime before setting a MinimumTime!");
     	}
-        final int childCount = getChildCount();
+        final int childCount = getRelevantChildCount();
         for (int i = 0; i < childCount; i++) {
-            View v = getChildAt(i);
+            View v = getRelevantChildAt(i);
             if (v instanceof ScrollLayout) {
                 ScrollLayout scroller = (ScrollLayout)v;
                 scroller.setMinTime(c.getTimeInMillis());
@@ -92,9 +132,9 @@ public class SliderContainer extends LinearLayout {
     	if (mTime==null) {
     		throw new RuntimeException("You have to call setTime before setting a MinimumTime!");
     	}
-        final int childCount = getChildCount();
+        final int childCount = getRelevantChildCount();
         for (int i = 0; i < childCount; i++) {
-            View v = getChildAt(i);
+            View v = getRelevantChildAt(i);
             if (v instanceof ScrollLayout) {
                 ScrollLayout scroller = (ScrollLayout)v;
                 scroller.setMaxTime(c.getTimeInMillis());
@@ -108,9 +148,9 @@ public class SliderContainer extends LinearLayout {
      */
     public void setMinuteInterval(int minInterval) {
     	this.minuteInterval = minInterval;
-        final int childCount = getChildCount();
+        final int childCount = getRelevantChildCount();
         for (int i = 0; i < childCount; i++) {
-            View v = getChildAt(i);
+            View v = getRelevantChildAt(i);
             if (v instanceof ScrollLayout) {
                 ScrollLayout scroller = (ScrollLayout)v;
                 scroller.setMinuteInterval(minInterval);
@@ -136,9 +176,9 @@ public class SliderContainer extends LinearLayout {
      *               this isn't the result of a ScrollLayout-generated time change.
      */
     private void arrangeScrollers(ScrollLayout source) {
-        final int childCount = getChildCount();
+        final int childCount = getRelevantChildCount();
         for (int i = 0; i < childCount; i++) {
-            View v = getChildAt(i);
+            View v = getRelevantChildAt(i);
             if (v == source) {
                 continue;
             }

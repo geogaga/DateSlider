@@ -19,14 +19,18 @@
 
 package com.googlecode.android.widgets.DateSlider;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.googlecode.android.widgets.DateSlider.SliderContainer.OnTimeChangeListener;
@@ -36,7 +40,7 @@ import com.googlecode.android.widgets.DateSlider.SliderContainer.OnTimeChangeLis
  * displays the current time in the header, and notifies an observer
  * when the user selectes a time.
  */
-public class DateSlider extends Dialog {
+public class DateSlider extends LinearLayout {
 
 //	private static String TAG = "DATESLIDER";
 
@@ -46,6 +50,8 @@ public class DateSlider extends Dialog {
     protected TextView mTitleText;
     protected SliderContainer mContainer;
     protected int minuteInterval;
+    protected Context mContext;
+    protected Dialog mDialog = null;
 
 
     public DateSlider(Context context, int layoutID, OnDateSetListener l, Calendar initialTime) {
@@ -65,6 +71,7 @@ public class DateSlider extends Dialog {
             Calendar initialTime, Calendar minTime, Calendar maxTime, int minInterval) {
         super(context);
         SliderController.instance(context);
+        mContext = context;
         this.onDateSetListener = l;
         this.minTime = minTime; this.maxTime = maxTime;
         mInitialTime = Calendar.getInstance(initialTime.getTimeZone());
@@ -78,12 +85,71 @@ public class DateSlider extends Dialog {
         }
     }
 
+    public Dialog asDialog() {
+        mDialog = new Dialog(mContext) {
+            @Override
+            public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                //this.getWindow().getDecorView().
+                DateSlider.this.onCreate(savedInstanceState);
+                // Note: if I set a new title component for this dialog, only the dialog will be able
+                // to access its title text.
+                // Corollary: if not in a dialog, we will not access our whole app title. Yay!
+                final boolean customTitleSupported = requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+                this.setContentView(DateSlider.this);
+                if(customTitleSupported) {
+                    getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, SliderController.instance().getParcel().getLayoutId("dialogtitle"));
+                }
+                mTitleText = (TextView)findViewById(SliderController.instance().getParcel().getItemId("dateSliderTitleText"));
+            }
+        };
+        return mDialog;
+    }
+
+
+    public DateSlider asEmbed() {
+        onCreate(null);
+        findViewById(SliderController.instance().getParcel().getItemId("dateSliderButLayout")).setVisibility(View.GONE);
+        return this;
+    }
+
+    public void dismiss() {
+        if(mDialog != null) {
+            mDialog.dismiss();
+        }
+    }
+
+    public final boolean requestWindowFeature(int featureId) {
+        if(mDialog != null) {
+            return mDialog.requestWindowFeature(featureId);
+        }
+        else {
+            return false;
+        }
+    }
+
+    public Window getWindow() {
+        if(mDialog != null) {
+            return mDialog.getWindow();
+        }
+        else {
+            return ((Activity)mContext).getWindow();
+        }
+    }
+
+    public void setContentView(View view) {
+        this.addView(view);
+    }
+
+    public void setContentView(int id) {
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.addView(inflater.inflate(id, null));
+    }
+
     /**
      * Set up the dialog with all the views and their listeners
      */
-    @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
         if (savedInstanceState!=null) {
             Calendar c = (Calendar)savedInstanceState.getSerializable("time");
@@ -92,9 +158,7 @@ public class DateSlider extends Dialog {
             }
         }
 
-        this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(mLayoutID);
-        this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, SliderController.instance().getParcel().getLayoutId("dialogtitle"));
 
         mTitleText = (TextView) this.findViewById(SliderController.instance().getParcel().getItemId("dateSliderTitleText"));
         mContainer = (SliderContainer) this.findViewById(SliderController.instance().getParcel().getItemId("dateSliderContainer"));
@@ -137,6 +201,7 @@ public class DateSlider extends Dialog {
         }
     };
 
+    /* TODO
     @Override
     public Bundle onSaveInstanceState() {
         Bundle savedInstanceState = super.onSaveInstanceState();
@@ -144,6 +209,27 @@ public class DateSlider extends Dialog {
         savedInstanceState.putSerializable("time", getTime());
         return savedInstanceState;
     }
+    */
+
+    public long getSelectedId() {
+        Calendar cal = mContainer.getTime();
+        if(cal == null)
+            return 0L;
+        return cal.getTimeInMillis();
+    }
+
+    public String getSelectedText() {
+        Calendar cal = mContainer.getTime();
+        if(cal == null)
+            return null;
+        return DateFormat.getInstance().format(cal.getTime());
+    }
+
+    /* TODO REALLY?
+    public View getView() {
+        return mLayout;
+    }
+    */
 
     /**
      * @return The currently displayed time
