@@ -19,7 +19,10 @@
 
 package com.googlecode.android.widgets.DateSlider;
 
+import java.security.KeyStore;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -29,6 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.googlecode.android.widgets.DateSlider.labeler.AbstractLabelerModel;
 import com.googlecode.android.widgets.DateSlider.labeler.TimeLabeler;
 
 /**
@@ -48,6 +52,7 @@ static final int TIMESELECTOR_ID = 4;
 static final int TIMESELECTOR_WITHLIMIT_ID = 7;
 static final int DATETIMESELECTOR_ID = 5;
 static final int DATETIMEPICKERSELECTOR_ID = 8;
+static final int ENUMERATIONSELECTOR_ID = 9;
 
     private TextView dateText;
 
@@ -140,6 +145,14 @@ static final int DATETIMEPICKERSELECTOR_ID = 8;
             }
         });
 
+        Button enumerationButton = (Button) this.findViewById(R.id.enumerationSelectButton);
+        // set up a listener for when the button is pressed
+        enumerationButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+                // call the internal showDialog method using the predefined ID
+                showDialog(ENUMERATIONSELECTOR_ID);
+            }
+        });
     }
 
     // define the listener which is called once a user selected the date.
@@ -187,6 +200,18 @@ static final int DATETIMEPICKERSELECTOR_ID = 8;
             }
     };
 
+    private DateSlider.OnEnumSetListener mEnumerationSetListener =
+        new DateSlider.OnEnumSetListener() {
+            public void onEnumSet(DateSlider view, int idx) {
+                // update the dateText view with the corresponding date
+                dateText.setText(String.format("You selected: %s", new EnumModel().get(idx)));
+            }
+
+            public void onDateSet(DateSlider view, Calendar selectedDate) {
+                throw new IllegalArgumentException("This is an enumeration, not a date. Need a model.");
+            }
+        };
+
     @Override
     protected Dialog onCreateDialog(int id) {
         // this method is called after invoking 'showDialog' for the first time
@@ -216,7 +241,19 @@ static final int DATETIMEPICKERSELECTOR_ID = 8;
             return new DateTimeSlider(this,mDateTimeSetListener,c).asDialog();
         case DATETIMEPICKERSELECTOR_ID:
             return new DateTimePickerSlider(this,mFinerDateTimeSetListener,c).asDialog();
+        case ENUMERATIONSELECTOR_ID:
+            return new EnumerationSlider(
+                    this,
+                    new EnumModel(),
+                    mEnumerationSetListener).asDialog();
         }
         return null;
+    }
+
+    static public class EnumModel extends AbstractLabelerModel {
+        protected List<String> mModel = Arrays.asList("Orange", "Red", "Blue", "Yellow", "Green", "Maroon", "Gray", "Lightgray", "Magenta", "Pink", "Fuschia", "Mauve", "Cyan");
+        public List<String> getModel() {
+            return mModel;
+        }
     }
 }

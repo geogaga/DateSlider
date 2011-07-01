@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.googlecode.android.widgets.DateSlider.SliderContainer
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.googlecode.android.widgets.DateSlider"
+    android:id="@+id/dateSliderContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <com.googlecode.android.widgets.DateSlider.ScrollLayout
+        style="@style/Scroller"
+        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.EnumerationLabeler"
+        app:labelerFormat="%tY"
+        app:labelerModel="com.googlecode.android.widgets.DateSlider.Demo$EnumModel"
+        app:childWidth="90dp"/>
+    <include layout="@layout/dateslider_dialogbuttons"/>
+</com.googlecode.android.widgets.DateSlider.SliderContainer>

@@ -19,6 +19,7 @@
 package com.googlecode.android.widgets.DateSlider;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -36,6 +37,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
+import com.googlecode.android.widgets.DateSlider.labeler.AbstractLabelerModel;
 import com.googlecode.android.widgets.DateSlider.labeler.Labeler;
 import com.googlecode.android.widgets.DateSlider.timeview.TimeView;
 
@@ -96,6 +98,8 @@ public class ScrollLayout extends LinearLayout {
     private OnScrollListener listener;
     private TimeView mCenterView;
 
+    private AbstractLabelerModel mModel = null;
+
     public ScrollLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setWillNotDraw(false);
@@ -124,10 +128,27 @@ public class ScrollLayout extends LinearLayout {
             throw new RuntimeException("Must specify labelerFormat at " + a.getPositionDescription());
         }
 
+        String modelName = a.getString(SliderController.instance().getParcel().getStyleableId("ScrollLayout", "labelerModel"));
+        if(modelName != null) {
+            try {
+                Class<?> klazz = Class.forName(modelName);
+                Constructor<?> ctor = klazz.getConstructor();
+                mModel = (AbstractLabelerModel)ctor.newInstance();
+            } catch(Exception e) {
+                throw new RuntimeException("Failed to construct model at " + a.getPositionDescription(), e);
+            }
+        }
+
         try {
             Class<?> klazz = Class.forName(className);
-            Constructor<?> ctor = klazz.getConstructor(String.class);
-            mLabeler = (Labeler)ctor.newInstance(labelerFormat);
+            if(mModel != null) {
+                Constructor<?> ctor = klazz.getConstructor(String.class, AbstractLabelerModel.class);
+                mLabeler = (Labeler)ctor.newInstance(labelerFormat, mModel);
+            }
+            else {
+                Constructor<?> ctor = klazz.getConstructor(String.class);
+                mLabeler = (Labeler)ctor.newInstance(labelerFormat);
+            }
         } catch (Exception e) {
             throw new RuntimeException("Failed to construct labeler at " + a.getPositionDescription(), e);
         }
@@ -264,7 +285,7 @@ public class ScrollLayout extends LinearLayout {
             }
     	}
     }
-    
+
     /**
      * this element will position the TimeTextViews such that they correspond to the given time
      * @param time

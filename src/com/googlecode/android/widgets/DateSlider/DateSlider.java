@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.googlecode.android.widgets.DateSlider.SliderContainer.OnTimeChangeListener;
+import com.googlecode.android.widgets.DateSlider.labeler.AbstractLabelerModel;
 
 /**
  * A Dialog subclass that hosts a SliderContainer and a couple of buttons,
@@ -119,28 +120,6 @@ public class DateSlider extends LinearLayout {
         }
     }
 
-    public final boolean requestWindowFeature(int featureId) {
-        if(mDialog != null) {
-            return mDialog.requestWindowFeature(featureId);
-        }
-        else {
-            return false;
-        }
-    }
-
-    public Window getWindow() {
-        if(mDialog != null) {
-            return mDialog.getWindow();
-        }
-        else {
-            return ((Activity)mContext).getWindow();
-        }
-    }
-
-    public void setContentView(View view) {
-        this.addView(view);
-    }
-
     public void setContentView(int id) {
         LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.addView(inflater.inflate(id, null));
@@ -182,8 +161,16 @@ public class DateSlider extends LinearLayout {
 
     private android.view.View.OnClickListener okButtonClickListener = new android.view.View.OnClickListener() {
         public void onClick(View v) {
-            if (onDateSetListener!=null)
-                onDateSetListener.onDateSet(DateSlider.this, getTime());
+            if (onDateSetListener!=null) {
+                if(onDateSetListener instanceof OnEnumSetListener) {
+                    ((OnEnumSetListener) onDateSetListener).onEnumSet(
+                            DateSlider.this,
+                            getTime().get(Calendar.YEAR) - Calendar.getInstance().get(Calendar.YEAR));
+                }
+                else {
+                    onDateSetListener.onDateSet(DateSlider.this, getTime());
+                }
+            }
             dismiss();
         }
     };
@@ -225,12 +212,6 @@ public class DateSlider extends LinearLayout {
         return DateFormat.getInstance().format(cal.getTime());
     }
 
-    /* TODO REALLY?
-    public View getView() {
-        return mLayout;
-    }
-    */
-
     /**
      * @return The currently displayed time
      */
@@ -249,7 +230,6 @@ public class DateSlider extends LinearLayout {
         }
     }
 
-
     /**
      * Defines the interface which defines the methods of the OnDateSetListener
      */
@@ -260,5 +240,13 @@ public class DateSlider extends LinearLayout {
          *
          */
         public void onDateSet(DateSlider view, Calendar selectedDate);
+    }
+    public interface OnEnumSetListener extends OnDateSetListener {
+        /**
+         * this method is called when a date was selected by the user
+         * @param view			the caller of the method
+         *
+         */
+        public void onEnumSet(DateSlider view, int idx);
     }
 }
