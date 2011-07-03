@@ -24,8 +24,8 @@ public class EnumerationSlider extends DateSlider {
      * @param context
      * @param l
      */
-    public EnumerationSlider(Context context, AbstractLabelerModel model, OnDateSetListener l) {
-        super(context, SliderController.instance(context).getParcel().getLayoutId("enumerationslider"),
+    public EnumerationSlider(Context context, AbstractLabelerModel model, OnDateSetListener l, String layoutName) {
+        super(context, SliderController.instance(context).getParcel().getLayoutId(layoutName),
                 l, Calendar.getInstance(),
                 null, null, 1);
 
@@ -36,6 +36,16 @@ public class EnumerationSlider extends DateSlider {
         mStartYear   = mInitialTime.get(Calendar.YEAR);
 
         mEnumeratedValues = model.getModel();
+    }
+
+    /**
+     * initialise the EnumerationSlider
+     *
+     * @param context
+     * @param l
+     */
+    public EnumerationSlider(Context context, AbstractLabelerModel model, OnDateSetListener l) {
+        this(context, model, l, "enumerationslider");
     }
 
     /**

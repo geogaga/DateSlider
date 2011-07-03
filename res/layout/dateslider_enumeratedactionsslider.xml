@@ -9,7 +9,7 @@
         style="@style/Scroller"
         app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.EnumerationLabeler"
         app:labelerFormat="%tY"
-        app:labelerModel="com.googlecode.android.widgets.DateSlider.Demo$EnumModel"
-        app:childWidth="150dp"/>
+        app:labelerModel="com.googlecode.android.widgets.DateSlider.Demo$EnumActionModel"
+        app:childWidth="180dp"/>
     <include layout="@layout/dateslider_dialogbuttons"/>
 </com.googlecode.android.widgets.DateSlider.SliderContainer>

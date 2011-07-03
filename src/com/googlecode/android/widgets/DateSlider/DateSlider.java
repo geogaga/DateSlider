@@ -26,9 +26,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
+import android.view.*;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -53,7 +51,6 @@ public class DateSlider extends LinearLayout {
     protected int minuteInterval;
     protected Context mContext;
     protected Dialog mDialog = null;
-
 
     public DateSlider(Context context, int layoutID, OnDateSetListener l, Calendar initialTime) {
     	this(context,layoutID,l,initialTime, null, null, 1);
@@ -103,14 +100,24 @@ public class DateSlider extends LinearLayout {
                 }
                 mTitleText = (TextView)findViewById(SliderController.instance().getParcel().getItemId("dateSliderTitleText"));
             }
+
+            @Override
+            public Bundle onSaveInstanceState() {
+                Bundle savedInstanceState = super.onSaveInstanceState();
+                if (savedInstanceState==null) savedInstanceState = new Bundle();
+                savedInstanceState.putSerializable("time", getTime());
+                return savedInstanceState;
+            }
         };
         return mDialog;
     }
 
 
-    public DateSlider asEmbed() {
-        onCreate(null);
+    public DateSlider asEmbed(Bundle savedInstanceState) {
+        mDialog = new FauxDialog(mContext);
+        this.onCreate(savedInstanceState);
         findViewById(SliderController.instance().getParcel().getItemId("dateSliderButLayout")).setVisibility(View.GONE);
+        mDialog.show();
         return this;
     }
 
@@ -188,15 +195,9 @@ public class DateSlider extends LinearLayout {
         }
     };
 
-    /* TODO
-    @Override
     public Bundle onSaveInstanceState() {
-        Bundle savedInstanceState = super.onSaveInstanceState();
-        if (savedInstanceState==null) savedInstanceState = new Bundle();
-        savedInstanceState.putSerializable("time", getTime());
-        return savedInstanceState;
+        return mDialog.onSaveInstanceState();
     }
-    */
 
     public long getSelectedId() {
         Calendar cal = mContainer.getTime();
@@ -248,5 +249,25 @@ public class DateSlider extends LinearLayout {
          *
          */
         public void onEnumSet(DateSlider view, int idx);
+    }
+
+    class FauxDialog extends Dialog {
+        public FauxDialog(Context context) {
+            super(context, SliderController.instance().getParcel().getIdentifier("InvisibleDialog", "style"));
+
+            Window window = this.getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            window.setGravity(Gravity.BOTTOM);
+        }
+
+        @Override
+        public Bundle onSaveInstanceState() {
+            Bundle savedInstanceState = super.onSaveInstanceState();
+            if (savedInstanceState==null) savedInstanceState = new Bundle();
+            savedInstanceState.putSerializable("time", getTime());
+            return savedInstanceState;
+        }
     }
 }

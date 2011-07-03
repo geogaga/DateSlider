@@ -6,4 +6,11 @@
         <item name="android:background">@drawable/dateslider_slider_back</item>
         <item name="android:layout_margin">3dp</item>
     </style>
+
+    <style name="dateslider_InvisibleDialog" parent="android:Theme.Dialog">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">1px</item>
+    </style>
+
 </resources>

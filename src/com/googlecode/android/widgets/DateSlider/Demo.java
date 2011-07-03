@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.googlecode.android.widgets.DateSlider.labeler.AbstractLabelerModel;
@@ -55,6 +56,8 @@ static final int DATETIMEPICKERSELECTOR_ID = 8;
 static final int ENUMERATIONSELECTOR_ID = 9;
 
     private TextView dateText;
+    private DateSlider mEnumSlider;
+    private DateSlider mBogusSlider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,6 +156,28 @@ static final int ENUMERATIONSELECTOR_ID = 9;
                 showDialog(ENUMERATIONSELECTOR_ID);
             }
         });
+
+        LinearLayout additionalFields = (LinearLayout) this.findViewById(R.id.additionalFields);
+        TextView tv1 = new TextView(this);
+        tv1.setText("At exactly this time...");
+        additionalFields.addView(tv1);
+        mBogusSlider = new DateTimePickerSlider(this, mFinerDateTimeSetListener, Calendar.getInstance()).asEmbed(savedInstanceState == null ? null : savedInstanceState.getBundle("test_2"));
+        additionalFields.addView(mBogusSlider);
+        TextView tv2 = new TextView(this);
+        tv2.setText("Remind me:");
+        additionalFields.addView(tv2);
+        mEnumSlider = new EnumerationSlider(
+                this,
+                new EnumActionModel(),
+                mEnumerationSetListener,
+                "enumeratedactionsslider").asEmbed(savedInstanceState == null ? null : savedInstanceState.getBundle("test_1"));
+        additionalFields.addView(mEnumSlider);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBundle("test_1", mEnumSlider.onSaveInstanceState());
+        savedInstanceState.putBundle("test_2", mBogusSlider.onSaveInstanceState());
     }
 
     // define the listener which is called once a user selected the date.
@@ -252,6 +277,13 @@ static final int ENUMERATIONSELECTOR_ID = 9;
 
     static public class EnumModel extends AbstractLabelerModel {
         protected List<String> mModel = Arrays.asList("Orange", "Red", "Blue", "Yellow", "Green", "Maroon", "Gray", "Lightgray", "Magenta", "Pink", "Fuschia", "Mauve", "Cyan");
+        public List<String> getModel() {
+            return mModel;
+        }
+    }
+
+    static public class EnumActionModel extends AbstractLabelerModel {
+        protected List<String> mModel = Arrays.asList("Vacation", "Holiday", "Anniversary", "Birthday", "School", "Wedding", "Taxes");
         public List<String> getModel() {
             return mModel;
         }

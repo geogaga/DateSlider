@@ -1,0 +1,19 @@
+<project name="dateslider" basedir="." default="jar">
+	<target name="jar">
+	    <jar
+		destfile="libs/DateSlider.jar"
+		basedir="out/production/DateSlider/"
+		includes="com/**"
+	    />
+	</target>
+        <target name="zip" depends="jar">
+            <zip
+		destfile="DateSlider.zip"
+		basedir=".">
+                <include name="libs/DateSlider.jar" />
+                <include name="res/drawable/**" />
+                <include name="res/values/**" />
+                <include name="res/layout/dateslider_*.xml" />
+            </zip>
+        </target>
+</project>

@@ -28,8 +28,16 @@
         -->
         <Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select Time with Limit" android:id="@+id/timeLimitSelectButton"></Button>
         <Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select DateTime" android:id="@+id/dateTimeSelectButton"></Button>
-        <Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select DateTime" android:id="@+id/dateTimePickerSelectButton"></Button>
+        <Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select DateTime (Flip)" android:id="@+id/dateTimePickerSelectButton"></Button>
         <Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Select Enum" android:id="@+id/enumerationSelectButton"></Button>
+
+        <LinearLayout android:id="@+id/additionalFields"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#006666"
+        >
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
 <TextView

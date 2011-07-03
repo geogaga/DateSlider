@@ -53,10 +53,12 @@ public class DateTimePickerSlider extends DateSlider {
     }
 
     @Override
-    public DateSlider asEmbed() {
-        onCreate(null);
+    public DateSlider asEmbed(Bundle savedInstanceState) {
+        mDialog = new FauxDialog(mContext);
+        this.onCreate(savedInstanceState);
         findViewById(SliderController.instance().getParcel().getItemId("dateSliderOkButton")).setVisibility(View.INVISIBLE);
         findViewById(SliderController.instance().getParcel().getItemId("dateSliderCancelButton")).setVisibility(View.INVISIBLE);
+        mDialog.show();
         return this;
     }
 
