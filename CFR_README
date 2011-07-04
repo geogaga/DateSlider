@@ -1,0 +1,37 @@
+Hi,
+
+This is a fork of DatePicker, by Daniel Berndt: http://code.google.com/p/android-dateslider/
+Hopefully Daniel merges it into his codebase; or at least integrates what he likes.
+
+So, what's new in this fork?
+============================
+
+Two new component types:
+
+  DateTimePickerSlider offers a "flick" button to switch between setting date and time.
+
+  EnumerationSlider allows the developer to use strings rather than dates. This is a quick arbitrary value picker:
+    - Colors
+    - Names
+    - Events
+    - Etc.
+
+Library format:
+
+  This was done in three steps:
+    - All references to resources are now indirect thanks to Commoware's ParcelHelper class.
+    - All source files are packed into a jar file
+    - Siad jar file + resources are packed into a zip file
+
+  To use this library into your project, simply unzip it in your project's top directory. The resources files were renamed so that they will not conflict with your resources and the jar file will end up in libs/
+  You can then add the jar file to your project in Eclipse or IntelliJ.
+
+Build process:
+
+  It is the same as before.
+  Generating the library is done using a new file called makejar.ant:
+    - ant -f makejar.ant     -> create jar file
+    - ant -f makejar.ant zip -> create final zip file
+
+
+-Chris.
