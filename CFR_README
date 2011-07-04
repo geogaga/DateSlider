@@ -16,6 +16,10 @@ Two new component types:
     - Events
     - Etc.
 
+Can be used as dialog or embed:
+
+  All the components provided as part of DatePicker can be used as dialogs or incorporated in your current activities.
+
 Library format:
 
   This was done in three steps:
@@ -26,7 +30,25 @@ Library format:
   To use this library into your project, simply unzip it in your project's top directory. The resources files were renamed so that they will not conflict with your resources and the jar file will end up in libs/
   You can then add the jar file to your project in Eclipse or IntelliJ.
 
-Build process:
+Implementation changes
+======================
+
+  Explicit dialog/embed selection:
+    - new ...Slider().asDialog() returns a dialog.
+    - new ...Slider().asEmbed(savedInstanceState) returns the DateSlider object (it's a layout)
+
+  Saving an embedded DateSlider's value:
+    - unlike dialog version, not automated.
+    - save arbitrary value in onSaveInstanceState(...):
+      savedInstanceState.putBundle("<arbitrary key>", <embedded DateSlider>.onSaveInstanceState());
+    - restore using new ...Slider().asEmbed(savedInstanceState.getBundle("<arbitrary key>"))
+
+  Layout and values for EnumerationSlider:
+    - each EnumerationSlider will need its own layout .xml file.
+    - in layout .xml file, new attribute: labelerModel contains model's class name (which extends AbstractLabelerModel)
+
+Build process
+=============
 
   It is the same as before.
   Generating the library is done using a new file called makejar.ant:
