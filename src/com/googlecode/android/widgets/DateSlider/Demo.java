@@ -241,8 +241,8 @@ static final int ENUMERATIONSELECTOR_ID = 9;
     protected Dialog onCreateDialog(int id) {
         // this method is called after invoking 'showDialog' for the first time
         // here we initiate the corresponding DateSlideSelector and return the dialog to its caller
-    	
         final Calendar c = Calendar.getInstance();
+        
         switch (id) {
         case DEFAULTDATESELECTOR_ID:
             return new DefaultDateSlider(this,mDateSetListener,c).asDialog();
@@ -288,4 +288,5 @@ static final int ENUMERATIONSELECTOR_ID = 9;
             return mModel;
         }
     }
+    
 }

@@ -3,8 +3,6 @@ package com.googlecode.android.widgets.DateSlider;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-
-
 import android.content.Context;
 import android.database.CursorJoiner;
 import android.util.AttributeSet;
@@ -179,9 +177,8 @@ public class SliderContainer extends LinearLayout {
         final int childCount = getRelevantChildCount();
         for (int i = 0; i < childCount; i++) {
             View v = getRelevantChildAt(i);
-            if (v == source) {
-                continue;
-            }
+            if (v == source) continue;
+            
             if (v instanceof ScrollLayout) {
                 ScrollLayout scroller = (ScrollLayout)v;
                 scroller.setTime(mTime.getTimeInMillis());
