@@ -72,10 +72,11 @@ static final int DEFAULTDATESELECTOR_ID = 0;
     protected Dialog onCreateDialog(int id) {
         // this method is called after invoking 'showDialog' for the first time
         // here we initiate the corresponding DateSlideSelector and return the dialog to its caller
-    	
-        
+
+
         switch (id) {
         case DEFAULTDATESELECTOR_ID:
+            final Calendar c = Calendar.getInstance();
             return new DefaultDateSlider(this,mDateSetListener,c).asDialog();
 //            final Calendar c = Calendar.getInstance();
 //            final Calendar maxDate = Calendar.getInstance();
